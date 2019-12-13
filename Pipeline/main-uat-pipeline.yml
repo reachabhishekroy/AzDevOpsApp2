@@ -9,7 +9,7 @@ resources:
 
 variables: 
   modulespath: $(Pipeline.Workspace)\drop\Modules
-  paramspath: $(Pipeline.Workspace)\drop\Parameters
+  paramspath: $(Pipeline.Workspace)\drop\ARM
   scriptspath: $(Pipeline.Workspace)\drop\Scripts
   environment: 'UAT'
   azureSubscription: 'DevConnection'
@@ -43,9 +43,9 @@ stages:
 # Validate Application Security Groups
   - template: Pipelines/validate_template.yml@Templates
     parameters:
-      jobname: 'ApplicationSecurityGroupsArray'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\ApplicationSecurityGroupsArray\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\ApplicationSecurityGroupsArray\uat.parameters.json 
+      jobname: 'ApplicationSecGroups'
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\ARM\ASG\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\ARM\ASG\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Validate Network Security Groups
@@ -116,15 +116,15 @@ stages:
                         -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
                         -ResourceGroupParametersFile $(Pipeline.Workspace)\drop\Parameters\ResourceGroup\uat.parameters.json'
 
-# Deploy storage account using validated ARM templates
+# Deploy ASG using validated ARM templates
 
   - template: Pipelines/deploy_template.yml@Templates
     parameters:
-      deploymentname: 'ApplicationSecurityGroupsArray'
+      deploymentname: 'ApplicationSecGroups'
       environment: ${{ variables.environment }}
       scriptArguments: '-DeploymentName ASG-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\ApplicationSecurityGroupsArray\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\ApplicationSecurityGroupsArray\uat.parameters.json 
+                        -TemplateFile ${{ variables.paramspath }}\ARM\ASG\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\ARM\ASG\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy NSG using validated ARM templates
