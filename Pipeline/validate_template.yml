@@ -1,0 +1,43 @@
+# File: Pipelines/validate_template.yml 
+
+parameters:
+  jobname: ''
+  displayName: ''
+  artifact: 'drop'
+  azureSubscription: 'DevConnection'
+  scriptPath: '$(Pipeline.Workspace)\drop\Validate.ps1'
+  scriptArguments: ''
+  # parameters related to the AzSKKit.
+  azSkarmTemplatefilepath: '' #'$(Pipeline.Workspace)\drop\Modules\'
+  azSkarmTemplateparameterfilepath: '' #'$(Pipeline.Workspace)\drop\Parameters\'
+  azSkskipcontrolsfromfile: '' #'$(Pipeline.Workspace)\drop\Scripts\ARMControlsExclusionList.csv'
+
+jobs:
+
+- job: ${{ parameters.jobname }}
+  displayName: 'Validate ${{ parameters.jobname }}'
+  condition: 
+  pool:
+    name: Hosted Windows 2019 with VS2019
+  steps:
+  - download: current
+    artifact: ${{ parameters.artifact }}
+
+  - task: AzurePowerShell@4
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      ScriptType: 'FilePath'
+      ScriptPath: ${{ parameters.scriptPath }}
+      ScriptArguments: ${{ parameters.scriptArguments }}
+      azurePowerShellVersion: LatestVersion
+      errorActionPreference: stop
+
+#  - task: AzSKARMTemplateChecker@4
+#    displayName: 'ARM Security Check'
+#    continueOnError: true
+#    condition: and( succeeded(), ne('${{ parameters.azSkarmTemplatefilepath }}', ''))
+#    inputs:
+#      Recurse: false
+#      ARMTemplateFilePath: ${{ parameters.azSkarmTemplatefilepath }}
+#      ARMTemplateParameterFilePath: ${{ parameters.azSkarmTemplateparameterfilepath }}
+#      SkipControlsFromFile: ${{ parameters.azSkskipcontrolsfromfile }}
