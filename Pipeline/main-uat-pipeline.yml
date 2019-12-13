@@ -69,9 +69,9 @@ stages:
 # Validate Availability Sets
   - template: Pipelines/validate_template.yml@Templates
     parameters:
-      jobname: 'AvailabilitySetsArray'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\AvailabilitySetsArray\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySetsArray\uat.parameters.json 
+      jobname: 'AvailabilitySets'
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\AvailabilitySet\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySet\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Validate Azure SQL database server (PaaS)
@@ -152,11 +152,11 @@ stages:
 # Deploy Availability set for Azure VMs using validated ARM templates
   - template: Pipelines/deploy_template.yml@Templates
     parameters:
-      deploymentname: 'AvailabilitySetsArray'
+      deploymentname: 'AvailabilitySets'
       environment: ${{ variables.environment }}
       scriptArguments: '-DeploymentName AvailabilitySet-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\AvailabilitySetsArray\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySetsArray\uat.parameters.json 
+                        -TemplateFile ${{ variables.paramspath }}\AvailabilitySet\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySet\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy Azure SQL database server (PaaS) using validated ARM templates
