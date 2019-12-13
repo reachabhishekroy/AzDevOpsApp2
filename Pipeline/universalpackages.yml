@@ -1,5 +1,4 @@
-# File: .Pipelines/universalpackages.yml
-# Description: WARNING! This template is used in most Business Application pipelines in the Azure Migrate project.  
+# File: Pipelines/universalpackages.yml 
 
 jobs:
 
