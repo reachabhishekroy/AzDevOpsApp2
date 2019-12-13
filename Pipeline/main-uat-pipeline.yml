@@ -114,7 +114,7 @@ stages:
       scriptArguments: '-DeploymentName StorageAccounts-Deployment-$(Build.BuildNumber) 
                         -TemplateFile ${{ variables.modulespath }}\StorageAccounts\deploy.json 
                         -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
-                        -ResourceGroupParametersFile $(Pipeline.Workspace)\drop\Parameters\ResourceGroup\uat.parameters.json'
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy ASG using validated ARM templates
 
