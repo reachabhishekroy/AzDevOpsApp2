@@ -1,5 +1,4 @@
-# File: .Pipelines/deploy_template.yml
-# Description: WARNING! This template is used in most Business Application pipelines in the Azure Migrate project.  
+# File: Pipelines/deploy_template.yml
 
 parameters:
   deploymentname: ''
