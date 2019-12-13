@@ -1,0 +1,193 @@
+trigger: none
+
+# All templates are located in this repository.
+resources:
+  repositories:
+  - repository: Templates
+    type: git
+    name: 'Azure Migration'
+
+variables: 
+  modulespath: $(Pipeline.Workspace)\drop\Modules
+  paramspath: $(Pipeline.Workspace)\drop\Parameters
+  scriptspath: $(Pipeline.Workspace)\drop\Scripts
+  environment: 'UAT'
+  azureSubscription: 'DevConnection'
+
+stages:
+# Download the universal packages/ARM templates that is used in the pipeline.
+# Additional templates must be published and included in the template file or directly included in the parameters folder.
+- stage: Build
+  displayName: 'Build Artifacts'
+  jobs:
+  - template: Pipelines/universalpackages.yml@Templates
+
+# Validate that ARM templates are valid. Each module will be syntax tested and security tested. (AzSkKit)
+- stage: Validate
+  displayName: 'Validate ARM Templates'
+  dependsOn:
+  - Build
+  condition: 
+  jobs:
+
+# Validate storageaccount
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'StorageAccount'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\StorageAccounts\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+      azSkarmtemplatefilepath: '${{ variables.modulespath }}\StorageAccounts\deploy.json'
+      azSkarmTemplateparameterfilepath: '${{ variables.paramspath }}\StorageAccounts\uat.parameters.json'
+
+# Validate Application Security Groups
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'ApplicationSecurityGroupsArray'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\ApplicationSecurityGroupsArray\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\ApplicationSecurityGroupsArray\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Validate Network Security Groups
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'NetworkSecurityGroups'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\NetworkSecurityGroups\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\NetworkSecurityGroups\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Validate Azure KeyVault
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'KeyVault'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\KeyVault\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\KeyVault\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+      azSkarmTemplatefilepath: '${{ variables.modulespath }}\KeyVault\deploy.json'
+      azSkarmTemplateparameterfilepath: '${{ variables.paramspath }}\KeyVault\uat.parameters.json'
+
+# Validate Availability Sets
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'AvailabilitySetsArray'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\AvailabilitySetsArray\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySetsArray\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Validate Azure SQL database server (PaaS)
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'SQLDBServer'
+      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\SQLDBServer\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\SQLDBServer\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Validate SQL Server on Azure VM (IaaS)
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'SQLServerVM'
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\SQLServerVM\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\SQLServerVM\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Validate Application Azure Virtual Machine
+  - template: Pipelines/validate_template.yml@Templates
+    parameters:
+      jobname: 'VirtualMachine'
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\VirtualMachine\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\VirtualMachine\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'                        
+
+# Deploy the ARM templates for the specific environment using deployment jobs.
+- stage: UAT
+  displayName: 'Deploy App UAT'
+  dependsOn:
+  -  Validate
+  condition: 
+
+# Deploy storage account using validated ARM templates
+  jobs:
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      deploymentname: 'StorageAccount'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName StorageAccounts-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\StorageAccounts\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
+                        -ResourceGroupParametersFile $(Pipeline.Workspace)\drop\Parameters\ResourceGroup\uat.parameters.json'
+
+# Deploy storage account using validated ARM templates
+
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      deploymentname: 'ApplicationSecurityGroupsArray'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName ASG-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\ApplicationSecurityGroupsArray\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\ApplicationSecurityGroupsArray\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy NSG using validated ARM templates
+
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      deploymentname: 'NetworkSecurityGroup'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName NSG-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\NetworkSecurityGroups\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\NetworkSecurityGroups\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy KeyVault using validated ARM templates, add secrets with auto generated passwords
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      deploymentname: 'KeyVault'
+      environment: ${{ variables.environment }}
+      scriptPath: ${{ variables.scriptspath }}\Deploy.KV.Secrets.ps1
+      scriptArguments: '-DeploymentName KeyVault-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\KeyVault\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\KeyVault\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy Availability set for Azure VMs using validated ARM templates
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      deploymentname: 'AvailabilitySetsArray'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName AvailabilitySet-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\AvailabilitySetsArray\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AvailabilitySetsArray\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy Azure SQL database server (PaaS) using validated ARM templates
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      errorActionPreference: silentlyContinue
+      deploymentname: 'SQLDBServer'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName AzureSQLServer-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.modulespath }}\SQLDBServer\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\SQLDBServer\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy SQL Server image on Azure VM (IaaS) using validated ARM templates
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      errorActionPreference: silentlyContinue
+      deploymentname: 'SQLServerVM'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName SQLVM-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.paramspath }}\SQLServerVM\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\SQLServerVM\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
+
+# Deploy VirtualMachine for web application using validated ARM templates
+  - template: Pipelines/deploy_template.yml@Templates
+    parameters:
+      errorActionPreference: silentlyContinue
+      deploymentname: 'VirtualMachine'
+      environment: ${{ variables.environment }}
+      scriptArguments: '-DeploymentName SQLVM-Deployment-$(Build.BuildNumber) 
+                        -TemplateFile ${{ variables.paramspath }}\VirtualMachine\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\VirtualMachine\uat.parameters.json 
+                        -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
