@@ -1,0 +1,38 @@
+# File: .Pipelines/deploy_template.yml
+# Description: WARNING! This template is used in most Business Application pipelines in the Azure Migrate project.  
+
+parameters:
+  deploymentname: ''
+  displayName: ''
+  artifact: 'drop'
+  azureSubscription: 'DevConnection'
+  scriptPath: '$(Pipeline.Workspace)\drop\Deploy.ps1'
+  scriptArguments: ''
+  environment: ''
+  condition: ''
+
+jobs:
+
+- deployment: ${{ parameters.deploymentname }}
+  displayName: 'Deploy ${{ parameters.deploymentname }}'
+  condition: 
+  pool:
+    name: Hosted Windows 2019 with VS2019
+  environment: ${{ parameters.environment }}
+
+  strategy:
+      runOnce:
+        deploy:
+
+          steps:
+          - download: current
+            artifact: ${{ parameters.artifact }}
+
+          - task: AzurePowerShell@4
+            inputs:
+              azureSubscription: ${{ parameters.azureSubscription }}
+              ScriptType: 'FilePath'
+              ScriptPath: ${{ parameters.scriptPath }}
+              ScriptArguments: ${{ parameters.scriptArguments }}
+              azurePowerShellVersion: LatestVersion
+              errorActionPreference: stop
