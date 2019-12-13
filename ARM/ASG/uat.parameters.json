@@ -1,0 +1,19 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "tagValues" : {
+            "value": {
+                "BusinessApplication": "xxxxxx",
+                "CostCenter": "yyyyyy",
+                "Environment" : "UAT"
+            },            
+            "metadata": {
+                "description": "List of key/value pair to be used as tags for all resources in the deployment. "
+            }
+        },
+        "applicationSecurityGroupName": {
+            "value" : ["sample-app-uat-asg","sample-db-uat-asg"]
+        } 
+    }
+}
