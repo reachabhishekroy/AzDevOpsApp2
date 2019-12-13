@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "tagValues": {
+            "type": "object",
+               "defaultValue": {
+                   "TEXT": "Tags have not been implemented."
+                },
+            "metadata": {
+                "description": "Tags that will be applied to all resources in this deployment."
+            }
+        },
+        "applicationSecurityGroupName": {
+           "type": "array",
+           "metadata": {
+                "description": "Required. Name of the Application Security Group."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "copy": { 
+                "name" : "asg-loop",
+                "count": "[length(parameters('applicationSecurityGroupName'))]"
+            },
+            "type": "Microsoft.Network/applicationSecurityGroups",
+            "apiVersion": "2017-10-01",
+            "name": "[parameters('applicationSecurityGroupName')[copyindex()]]",
+            "location": "[resourceGroup().location]",
+            "tags" : "[parameters('tagValues')]",
+            "properties": {}    
+        }
+    ],
+    "outputs": {
+        "applicationSecurityGroupResourceGroup": {
+            "type": "string",
+            "value": "[resourceGroup().name]",
+            "metadata": {
+                "description": "The name of the Resource Group the Application Security Groups were created in."
+            }
+        }
+    }
+}
