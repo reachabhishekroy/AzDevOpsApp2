@@ -1,0 +1,155 @@
+# File: .Pipelines/universalpackages.yml
+# Description: WARNING! This template is used in most Business Application pipelines in the Azure Migrate project.  
+
+jobs:
+
+- job: Download_Modules_And_Create_BuildArtifact
+  displayName: "Download Universalpackages"
+  pool:
+    name: Hosted Windows 2019 with VS2019
+  continueOnError: 'true'
+    
+  steps:
+  - task: CopyFiles@2
+    displayName: 'Copy Parameterfiles to: $(build.artifactstagingdirectory)\'
+    inputs:
+      SourceFolder: ''
+      TargetFolder: '$(build.artifactstagingdirectory)'
+      CleanTargetFolder: true
+      OverWrite: true
+
+  - task: UniversalPackages@0
+    displayName: 'Get SQLDatabase Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\SQLDatabase'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'sqldatabase'
+      vstsPackageVersion: '0.6.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get SQLDBServer Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\SQLDBServer'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'sqldbserver'
+      vstsPackageVersion: '0.1.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get KeyVault Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\KeyVault'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'keyvault'
+      vstsPackageVersion: '1.33.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get AvailabilitySetArray Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\AvailabilitySetsArray'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'availabilitysetarray'
+      vstsPackageVersion: '0.1.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get StorageAccounts Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\StorageAccounts'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'storageaccounts'
+      vstsPackageVersion: '1.3.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get LogAnalytics Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\LogAnalytics'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'loganalytics'
+      vstsPackageVersion: '0.4.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get ApplicationSecurityGroupsArray Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\ApplicationSecurityGroupsArray'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'applicationsecuritygroupsarray'
+      vstsPackageVersion: '0.1.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get NetworkSecurityGroups Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\NetworkSecurityGroups'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'networksecuritygroups'
+      vstsPackageVersion: '1.8.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get VirtualMachines Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\VirtualMachines'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'virtualmachines'
+      vstsPackageVersion: '1.16.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get DataMigrationService Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\DataMigrationService'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'datamigrationservice'
+      vstsPackageVersion: '0.5.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get VirtualMachines Module (previous)'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\VirtualMachines'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'virtualmachines'
+      vstsPackageVersion: '1.18.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get VirtualMachine Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\VirtualMachine'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'virtualmachine'
+      vstsPackageVersion: '1.19.0'
+
+  - task: UniversalPackages@0
+    displayName: 'Get SharedImageGallery Module'
+    inputs:
+      command: 'download'
+      downloadDirectory: '$(build.artifactstagingdirectory)\Modules\SharedImageGallery'
+      feedsToUse: 'internal'
+      vstsFeed: 'FoundationArtifacts'
+      vstsFeedPackage: 'sharedimagegallery'
+      vstsPackageVersion: '0.2.0'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Build Artifact'
+    inputs:
+      artifactName: 'drop'
+      pathtoPublish: '$(build.artifactstagingdirectory)'
