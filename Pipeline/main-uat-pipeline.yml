@@ -52,8 +52,8 @@ stages:
   - template: Pipelines/validate_template.yml@Templates
     parameters:
       jobname: 'NetworkSecurityGroups'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\NetworkSecurityGroups\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\NetworkSecurityGroups\uat.parameters.json 
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\NSG\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\NSG\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Validate Azure KeyVault
@@ -134,8 +134,8 @@ stages:
       deploymentname: 'NetworkSecurityGroup'
       environment: ${{ variables.environment }}
       scriptArguments: '-DeploymentName NSG-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\NetworkSecurityGroups\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\NetworkSecurityGroups\uat.parameters.json 
+                        -TemplateFile ${{ variables.paramspath }}\NSG\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\NSG\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy KeyVault using validated ARM templates, add secrets with auto generated passwords
