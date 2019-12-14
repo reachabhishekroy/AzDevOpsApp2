@@ -77,9 +77,9 @@ stages:
 # Validate Azure SQL database server (PaaS)
   - template: Pipelines/validate_template.yml@Templates
     parameters:
-      jobname: 'SQLDBServer'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\SQLDBServer\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\SQLDBServer\uat.parameters.json 
+      jobname: 'AzureSQLDBServer'
+      scriptArguments: '-TemplateFile ${{ variables.paramspath  }}\AzureSQLDBServer\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AzureSQLDBServer\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Validate SQL Server on Azure VM (IaaS)
@@ -163,11 +163,11 @@ stages:
   - template: Pipelines/deploy_template.yml@Templates
     parameters:
       errorActionPreference: silentlyContinue
-      deploymentname: 'SQLDBServer'
+      deploymentname: 'AzureSQLDBServer'
       environment: ${{ variables.environment }}
       scriptArguments: '-DeploymentName AzureSQLServer-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\SQLDBServer\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\SQLDBServer\uat.parameters.json 
+                        -TemplateFile ${{ variables.paramspath }}\AzureSQLDBServer\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\AzureSQLDBServer\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy SQL Server image on Azure VM (IaaS) using validated ARM templates
