@@ -187,7 +187,7 @@ stages:
       errorActionPreference: silentlyContinue
       deploymentname: 'VirtualMachine'
       environment: ${{ variables.environment }}
-      scriptArguments: '-DeploymentName SQLVM-Deployment-$(Build.BuildNumber) 
+      scriptArguments: '-DeploymentName App-VM-Deployment-$(Build.BuildNumber) 
                         -TemplateFile ${{ variables.paramspath }}\VirtualMachine\deploy.json 
                         -ParametersFile ${{ variables.paramspath }}\VirtualMachine\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
