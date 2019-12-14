@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "tagValues" : {
+            "value": {
+                "value": {
+                    "BusinessApplication": "xxxxxx",
+                    "CostCenter": "yyyyyy",
+                    "Environment" : "UAT"
+                 }          
+        },
+        "virtualMachineName": {
+            "value": "myazvm1"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "virtualMachineOSImage": {
+            "value": "2019-Datacenter"
+        },
+        "virtualMachineOSType": {
+            "value": "windows"
+        },
+        "diagnosticStorageAccountName": {
+            "value": "StorageAccountName"
+        },
+        "vNetName": {
+            "value": "VNETNAME"
+        },
+        "subNetName": {
+            "value": "SUBNETNAME"
+        },
+        "adminUsername": {
+            "value": "vm-admin"
+        },
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                  "id": "/subscriptions/<subscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+                },
+                "secretName": "vm-admin"
+            }
+        },
+        "keyVaultResourceGroup": {
+            "value": "KEYVAULTRESOURCEGROUP"
+        },
+        "keyVaultName": {
+            "value": "mykeyvaultname"
+        }                                                                                              
+    }
+}
