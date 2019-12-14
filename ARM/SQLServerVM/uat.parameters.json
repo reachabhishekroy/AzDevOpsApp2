@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "tagValues" : {
+        "value": {
+            "BusinessApplication": "xxxxxx",
+            "CostCenter": "yyyyyy",
+            "Environment" : "UAT"
+         }         
+    },  
+    "virtualMachineName": {
+      "value": "mysqlvm1"
+    },
+    "adminUsername": {
+      "value": "sql-admin"
+    },
+    "adminPassword": {
+        "reference": {
+            "keyVault": {
+              "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+            },
+            "secretName": "sql-admin"
+        }
+    },
+    "virtualMachineSize": {
+        "value":"Standard_DS13_v2"
+    },
+    "existingVirtualNetworkName": {
+        "value":"VNETNAME"
+    },
+    "existingSubnetName": {
+        "value": "SUBNETNAME"
+    },
+    "imageOffer": {
+        "value":"SQL2017-WS2016"
+    },
+    "sqlSku": {
+        "value":"Enterprise"
+    },
+    "storageWorkloadType": {
+        "value":"General"
+    },
+    "virtualNetworkResourceGroupName": {
+        "value":"VNETRESOURCEGROUPNAME"
+    }                                   
+  }
+}
