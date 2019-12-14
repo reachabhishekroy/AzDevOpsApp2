@@ -1,0 +1,37 @@
+
+
+                {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "tagValues" : {
+                            "value": {
+                                "BusinessApplication": "xxxxxx",
+                                "CostCenter": "yyyyyy",
+                                "Environment" : "UAT"
+                             }              
+                        },
+                        "administratorLogin": {
+                            "value": "sql-admin"
+                        },
+                        "administratorLoginPassword": {
+                            "reference": {
+                                "keyVault": {
+                                  "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyvaultName>"
+                                },
+                                "secretName": "sql-admin"
+                            }
+                        },
+                        "serverName": {
+                            "value": "sqlsrvat-wrk-01"
+                        },
+                        "diagnosticStorageAccountId": {
+                            "value": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.Storage/storageAccounts/<StorageAccountName>"
+                        },
+                        "workspaceId": {
+                            "value": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
+                        }    
+                    }
+                }                
+
+                
