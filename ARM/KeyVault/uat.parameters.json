@@ -1,0 +1,88 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "tagValues" : {
+            "value": {
+               "BusinessApplication": "xxxxxx",
+               "CostCenter": "yyyyyy",
+               "Environment" : "UAT"
+            }             
+        },
+        "availabilitySetName": {
+            "value" : ["my-app-uat-avset","my-db-uat-avset"]
+        }
+    }
+}
+
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "tagValues" : {
+            "value": {
+                "BusinessApplication": "xxxxxx",
+                "CostCenter": "yyyyyy",
+                "Environment" : "UAT"
+            }          
+        }, 
+        "keyVaultName": {
+            "value": "mynew-uat-kv"
+        },
+        "workspaceId": {
+            "value": "/subscriptions/<subscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
+        },
+        "diagnosticStorageAccountId": {
+            "value": "/subscriptions/<subscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.Storage/storageAccounts/<StorageAccountName>"
+        },
+        "lockForDeletion": {
+            "value": false
+        },
+        "enableVaultForDeployment": {
+            "value": true
+        },
+        "enableVaultForDiskEncryption": {
+            "value": true
+        },
+        "enableVaultForTemplateDeployment": {
+            "value": true
+        },
+        "diagnosticLogsRetentionInDays": {
+            "value": 365
+        },
+        "accessPolicies": {
+            "value": [
+                {
+                    "tenantId": "<TenantID>",
+                    "objectId": "<ObjectId>",
+                    "permissions": {
+                        "certificates": [
+                            "All"
+                        ],
+                        "keys": [
+                            "All"
+                        ],
+                        "secrets": [
+                            "All"
+                        ]
+                    }
+                },
+                 {
+                    "tenantId": "<TenantID>",
+                    "objectId": "<ObjectID>",
+                    "permissions": {
+                        "certificates": [
+                            "All"
+                        ],
+                        "keys": [
+                            "All"
+                        ],
+                        "secrets": [
+                            "All"
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
