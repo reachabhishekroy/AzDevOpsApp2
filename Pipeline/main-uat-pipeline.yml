@@ -34,11 +34,11 @@ stages:
   - template: Pipelines/validate_template.yml@Templates
     parameters:
       jobname: 'StorageAccount'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\StorageAccounts\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\StorageAccount\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\StorageAccount\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
-      azSkarmtemplatefilepath: '${{ variables.modulespath }}\StorageAccounts\deploy.json'
-      azSkarmTemplateparameterfilepath: '${{ variables.paramspath }}\StorageAccounts\uat.parameters.json'
+      azSkarmtemplatefilepath: '${{ variables.modulespath }}\StorageAccount\deploy.json'
+      azSkarmTemplateparameterfilepath: '${{ variables.paramspath }}\StorageAccount\uat.parameters.json'
 
 # Validate Application Security Groups
   - template: Pipelines/validate_template.yml@Templates
@@ -112,8 +112,8 @@ stages:
       deploymentname: 'StorageAccount'
       environment: ${{ variables.environment }}
       scriptArguments: '-DeploymentName StorageAccounts-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\StorageAccounts\deploy.json 
-                        -ParametersFile ${{ variables.paramspath }}\StorageAccounts\uat.parameters.json 
+                        -TemplateFile ${{ variables.paramspath }}\StorageAccount\deploy.json 
+                        -ParametersFile ${{ variables.paramspath }}\StorageAccount\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
 # Deploy ASG using validated ARM templates
