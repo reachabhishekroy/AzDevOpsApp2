@@ -60,10 +60,10 @@ stages:
   - template: Pipelines/validate_template.yml@Templates
     parameters:
       jobname: 'KeyVault'
-      scriptArguments: '-TemplateFile ${{ variables.modulespath }}\KeyVault\deploy.json 
+      scriptArguments: '-TemplateFile ${{ variables.paramspath }}\KeyVault\deploy.json 
                         -ParametersFile ${{ variables.paramspath }}\KeyVault\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
-      azSkarmTemplatefilepath: '${{ variables.modulespath }}\KeyVault\deploy.json'
+      azSkarmTemplatefilepath: '${{ variables.paramspath }}\KeyVault\deploy.json'
       azSkarmTemplateparameterfilepath: '${{ variables.paramspath }}\KeyVault\uat.parameters.json'
 
 # Validate Availability Sets
@@ -145,7 +145,7 @@ stages:
       environment: ${{ variables.environment }}
       scriptPath: ${{ variables.scriptspath }}\Deploy.KV.Secrets.ps1
       scriptArguments: '-DeploymentName KeyVault-Deployment-$(Build.BuildNumber) 
-                        -TemplateFile ${{ variables.modulespath }}\KeyVault\deploy.json 
+                        -TemplateFile ${{ variables.paramspath }}\KeyVault\deploy.json 
                         -ParametersFile ${{ variables.paramspath }}\KeyVault\uat.parameters.json 
                         -ResourceGroupParametersFile ${{ variables.paramspath }}\ResourceGroup\uat.parameters.json'
 
