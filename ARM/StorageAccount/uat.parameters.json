@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "tagValues" : {
+            "value": {
+                "value": {
+                    "BusinessApplication": "xxxxxx",
+                    "CostCenter": "yyyyyy",
+                    "Environment" : "UAT"
+                 }          
+        },
+        "storageAccountName": {
+            "value": "mystorageaccount1"
+        }
+    }
+}
